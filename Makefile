@@ -1,4 +1,4 @@
-all:str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char
+all:str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print
 
 str_del:str_del.c
 	gcc -o $@ $<
@@ -18,5 +18,8 @@ str_del_chars:str_del_chars.c
 str_first_char:str_first_char.c
 	gcc -o $@ $<
 
+str_print:str_print.c
+	gcc -o $@ $<
+
 clean:
-	rm -f str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char
+	rm -f str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print
