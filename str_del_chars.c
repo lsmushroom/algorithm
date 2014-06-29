@@ -36,7 +36,6 @@ char* foo(char* str1 , char* str2)
 
     str1[k] = '\0';
     
-
     return str1;
 }
 
