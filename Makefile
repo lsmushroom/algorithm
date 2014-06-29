@@ -1,4 +1,4 @@
-all:str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print count_1
+all:str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print count_1 binary_tree_to_list
 
 count_1:count_1.c
 	gcc -o $@ $<
@@ -24,5 +24,8 @@ str_first_char:str_first_char.c
 str_print:str_print.c
 	gcc -o $@ $<
 
+binary_tree_to_list:binary_tree_to_list.c
+	gcc -g -o $@ $<
+
 clean:
-	rm -f str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print count_1
+	rm -f str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print count_1 binary_tree_to_list
