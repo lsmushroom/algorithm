@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stack>
+#include <vector>
+#include <algorithm>
+#include <iostream>
 
-#define MAX 10
+using namespace std;
+
+#define MAX 6
 
 typedef struct __node
 {
@@ -96,7 +102,7 @@ void add(node** root , int key)
     }
 
 //    node* p = new node();
-    node* p = malloc(sizeof(node));
+    node* p = (node*)malloc(sizeof(node));
     p->key = key;
     p->parent = parent;
 
@@ -121,6 +127,41 @@ void inter_walk_tree(node* p)
     inter_walk_tree(p->left);
     printf("[%d] " , p->key);
     inter_walk_tree(p->right);
+}
+
+void inter_walk_loop(node* p)
+{
+    if(!p)
+        return ;
+
+    node* curr = p;
+    stack<node*> nodes; 
+
+    while(curr)
+    {
+        if(curr->left)
+        {
+            nodes.push(curr);
+            curr = curr->left;
+            continue;
+        }
+R: 
+        printf("[%d] " , curr->key);
+    
+        if(curr->right)
+        {
+            curr = curr->right;
+            continue;
+        }
+
+        if(!nodes.empty()) {
+            curr = nodes.top();
+            nodes.pop();
+            goto R;
+        } else {
+            break;
+        }
+    }
 }
 
 node* find(node** root , int key)
@@ -186,24 +227,136 @@ node* convert(node* head)
 
     return listhead;
 }
+/* 在二元树中找出和为某一值的所有路径
+ * 输入一个整数和一棵二元树。从树的根结点开始往下访问一直到叶结点所经过
+ * 的所有结点形成一条路径。打印出和与输入整数相等的所有路径
+ *
+ * 递归实现
+ * */
+void caculate(node* p , const int val , int &cnt , vector<node*> &path)
+{
+    if(!p)
+        return ;
+
+    bool isLeaf = true;
+    cnt += p->key;
+    path.push_back(p);
+
+    if(p->left) {
+        isLeaf = false;
+        caculate(p->left , val , cnt , path);
+    }
+
+    if(p->right) {
+        isLeaf = false;
+        caculate(p->right , val , cnt , path);
+    }
+
+    if(isLeaf && cnt == val) {
+        vector<node*>::iterator itr = path.begin();
+        for(; itr < path.end(); itr++)
+        {
+            cout << (*itr)->key << " " ;
+        }
+        cout << endl;
+    }
+
+    cnt -= p->key;
+    path.pop_back();
+}
+
+/*
+ * 非递归实现
+ * */
+void caculate_loop(node* root , const int val)
+{
+    if(!root)
+        return ;
+
+    vector<node*> nodes;
+    node* p = root;
+    int cnt = 0;
+
+    while(p)
+    {
+        cnt += p->key;
+        nodes.push_back(p);
+        
+        if(p->left)
+        {
+            p = p->left;
+            continue;
+        }
+R:
+        if(p->right)
+        {
+            p = p->right;
+            continue;
+        }
+
+        if(cnt == val)
+        {
+            vector<node*>::iterator itr = nodes.begin();
+            for(; itr < nodes.end(); itr++)
+            {
+                cout << (*itr)->key << " " ;
+            }
+            cout << endl;
+            //back to grandpa
+            if( !nodes.empty() ) {
+                itr = --nodes.end();
+                cnt -= (*itr)->key;
+                nodes.pop_back();
+            }
+
+            if( !nodes.empty() ) {
+                itr = --nodes.end();
+                cnt -= (*itr)->key;
+                nodes.pop_back();
+            }
+
+            if( !nodes.empty() ) {
+                p = nodes.back();
+                goto R;
+            }
+             
+            break;
+        }
+        else
+        {
+            cnt -= p->key;
+            //vector<node*> itr = find(nodes.begin(), nodes.end() , p);
+            //nodes.erase(itr);
+
+            if( !nodes.empty() ) {
+                nodes.pop_back();
+                p = nodes.back();
+                goto R;
+            }
+            break;
+        }
+    }
+}
 
 int main(int argc , char** argv)
 {
-    int arr[MAX];
     int i;
     node* root = NULL;
+//    int arr[MAX] = {10 , 5 , 12, 4 , 7 };
+    int arr[MAX] = {9 , 6, 7, 3, 4, 13};
 
-    for(i = 0; i < MAX; i++)
+/*  for(i = 0; i < MAX; i++)
     {
-        arr[i] = rand() % 100;
-    }
+        arr[i] = rand() % 50;
+    }*/
 
     for(i = 0; i < MAX; i++)
     {
         add(&root , arr[i]);
     }
 
-    inter_walk_tree(root);
+//    inter_walk_tree(root);
+    inter_walk_loop(root);
     printf("\n");
 
     /*test case succesor*/
@@ -215,6 +368,12 @@ int main(int argc , char** argv)
         printf("[%d] [%d]\n" , tmp->key , s->key);*/
     /*test case*/
 
+    //caculate(root , );
+
+    int cnt = 0;
+    vector<node*> path;
+    caculate(root , 22 , cnt , path);
+//    caculate_loop(root , 22);
     node* tmp = convert(root);
     while(tmp) {
         printf("[%d] " , tmp->key);
