@@ -13,7 +13,7 @@ void print(char* str , int chosen)
         if(!((mask << i) & chosen))
         {
             printf("%c" , str[i]);
-            chosen &= (mask << i);
+            chosen |= (mask << i);
             print(str , chosen);
             chosen &= ~(mask << i);
         }
