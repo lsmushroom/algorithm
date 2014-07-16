@@ -32,15 +32,17 @@ int foo(char* str)
         i--;
 
         if( i >= 0 && i < j && str[i] != '*')
-        //if(i < j && str[i] != '*')
         {
-            swap(str[i] , str[j]);
-            cnt++;
+            //swap(str[i] , str[j]);
+            str[j] = str[i];
+            str[i] = '*';
             j--;
         }
     }
 
-    return cnt;
+    //下标j 始终指向* ，当停止时j指向的是最后一个*的位置，
+    //由此* 的个数即为j + 1
+    return j + 1;
 }
 
 int main(int argc , char** argv)
