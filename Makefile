@@ -1,4 +1,4 @@
-all:str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print count_1 binary_tree_to_list str_star_mv
+all:str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print count_1 binary_tree_to_list str_star_mv str_loop_word odd_even_mv
 
 count_1:count_1.c
 	gcc -o $@ $<
@@ -30,5 +30,11 @@ binary_tree_to_list:binary_tree_to_list.cpp
 str_star_mv:str_star_mv.c
 	gcc -g -o $@ $<
 
+str_loop_word:str_loop_word.c
+	gcc -g -o $@ $<
+
+odd_even_mv:odd_even_mv.c
+	gcc -g -o $@ $<
+
 clean:
-	rm -f str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print count_1 binary_tree_to_list str_star_mv
+	rm -f str_del str_reverse str_del_char str_left_rotate str_del_chars str_first_char str_print count_1 binary_tree_to_list str_star_mv str_loop_word odd_even_mv
