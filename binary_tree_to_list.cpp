@@ -339,6 +339,36 @@ R:
     }
 }
 
+void height(node* node , int* max , int h)
+{
+    if(!node)
+        return ;
+
+    height(node->left , max , h + 1);
+    height(node->right , max , h + 1);
+
+    if(h > *max)
+        *max = h;
+
+    return ;
+}
+
+//求二元查找树的镜像
+void mirror(node* p)
+{
+    if(!p)
+        return ;
+
+    node* tmp = NULL;
+
+    tmp = p->left;
+    p->left = p->right;
+    p->right = tmp;
+
+    mirror(p->left);
+    mirror(p->right);
+}
+
 int main(int argc , char** argv)
 {
     int i;
@@ -360,6 +390,11 @@ int main(int argc , char** argv)
     inter_walk_loop(root);
     printf("\n");
 
+    mirror(root);
+   
+    printf("mirror:\n");
+    inter_walk_loop(root);
+    printf("\n");
     /*test case succesor*/
 //  node* tmp = find(&root , atoi(argv[1]));
     /*node* tmp = find(&root , 49);
@@ -371,6 +406,10 @@ int main(int argc , char** argv)
 
     //caculate(root , );
 
+    int h = 0;
+    height(root , &h , 0);
+
+    printf("tree height:%d\n" , h);
     int cnt = 0;
     vector<node*> path;
     caculate(root , 22 , cnt , path);
