@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stack>
+#include <queue>
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -15,6 +16,10 @@ typedef struct __node
     struct __node* left;
     struct __node* right;
     struct __node* parent;
+
+    int leftmax;
+    int rightmax;
+    int max;
 }node;
 
 node* successor(node* n)
@@ -369,6 +374,73 @@ void mirror(node* p)
     mirror(p->right);
 }
 
+/*
+ * 求二叉树中距离最远的两个点
+ * */
+//void distance(node* p , int* max , int leftmax , int rightmax)
+void distance(node* p , int* max)
+{
+    if(!p)
+        return;
+
+    if(! p->left) {
+        p->leftmax = 0;
+    }
+    
+    if(! p->right) {
+        p->rightmax = 0;
+    }
+
+    if(p->left)
+    {
+        distance(p->left , max);
+        p->leftmax = p->left->max + 1;
+    }
+    
+    if(p->right)
+    {
+        distance(p->right , max);
+        p->rightmax = p->right->max + 1;
+    }
+
+    if(p->leftmax > p->rightmax)
+    {
+        p->max = p->leftmax;
+    }
+    else
+    {
+        p->max = p->rightmax;
+    }
+
+    if(p->rightmax + p->leftmax > *max)
+        *max = p->rightmax + p->leftmax;
+
+    return ;
+}
+
+void walk_tree(node* p)
+{
+    if(!p)
+        return ;
+
+    node* tmp = NULL;
+    queue<node*> q;
+
+    q.push(p);
+    while(!q.empty())
+    {
+        tmp = q.front();
+        q.pop();
+
+        printf("[%d] " , tmp->key);
+        if(tmp->left)
+            q.push(tmp->left);
+        if(tmp->right)
+            q.push(tmp->right);
+    }
+    printf("\n");
+}
+
 int main(int argc , char** argv)
 {
     int i;
@@ -406,13 +478,25 @@ int main(int argc , char** argv)
 
     //caculate(root , );
 
+    //逐层遍历树
+ 
+    printf("walk tree:");
+    walk_tree(root);
+
+    //计算树的高度
     int h = 0;
     height(root , &h , 0);
-
     printf("tree height:%d\n" , h);
+
+    //计算树中结点间的最大距离
+    int max = 0;
+    distance(root , &max);
+    printf("max distance in a tree: %d\n" , max);
+   
     int cnt = 0;
     vector<node*> path;
     caculate(root , 22 , cnt , path);
+
 //    caculate_loop(root , 22);
     node* tmp = convert(root);
     while(tmp) {
@@ -420,7 +504,8 @@ int main(int argc , char** argv)
         tmp = tmp->right;
     }
     printf("\n");
-    
+ 
+
     /*test delete node*/
 /*    for(i = 0; i < MAX; i++)
     {
